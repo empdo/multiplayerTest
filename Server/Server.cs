@@ -61,14 +61,51 @@ public class Server
 	static void HandlePlayerDeltaPacket(Player player, byte[] deltaPacket)
 	{
 
-		float dx = BitConverter.ToSingle(deltaPacket, 0);
-		float dy = BitConverter.ToSingle(deltaPacket, sizeof(float));
-		float dz = BitConverter.ToSingle(deltaPacket, sizeof(float) * 2);
+		/*
+		
+		[[1, 1,2,3], [2, 1,2,3], [3, 1,2,3]]
+		  ^    ^
+		 type   vec3 
 
-		lock (player)
-		{
-			player.UpdatePositionFromDelta(dx, dy, dz);
+		type = 1 : position packet (det enda som behöver hanteras)
+
+        TODO: hanterar bara en grej
+        1. gör om till lista med packet, anta storlek från typ av värden i listan
+        2. switch kolla första shorten
+        3. köra rätt funktion beroende på första shorten
+		*/
+		
+		if (deltaPacket.Length < sizeof(ushort) + (sizeof(float) * 3)) { 
+			return;
 		}
+
+		int offset = 0;
+        while (offset < deltaPacket.Length) {
+
+            ushort type = BitConverter.ToUInt16(deltaPacket, offset);
+            offset += sizeof(ushort);
+            float dx = BitConverter.ToSingle(deltaPacket, offset);
+            offset += sizeof(float);
+            float dy = BitConverter.ToSingle(deltaPacket, offset);
+            offset += sizeof(float);
+            float dz = BitConverter.ToSingle(deltaPacket, offset);
+            offset += sizeof(float);
+
+            switch (type) {
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    lock (player)
+                    {
+                        player.UpdatePositionFromDelta(dx, dy, dz);
+                    }
+                    break;
+            }
+
+
+        }
 	}
 	public static void clientThread(object threadIndex)
 	{
