@@ -317,11 +317,11 @@
 -r:"Library/Bee/artifacts/2400b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/2400b0aE.dag/UnityEngine.UI.ref.dll"
 -r:"Library/Bee/artifacts/2400b0aE.dag/VSSettingsProvider.ref.dll"
-"Assets/Scripts/ClientListner.cs"
-"Assets/Scripts/ClientSender.cs"
-"Assets/Scripts/HandllePlayes.cs"
+"Assets/Scripts/HandlePlayers.cs"
 "Assets/Scripts/MovementScript.cs"
 "Assets/Scripts/MyTcpListner.cs"
+"Assets/Scripts/Player.cs"
+"Assets/Scripts/ServerConnection.cs"
 "Assets/Scripts/player_connection.cs"
 -langversion:8.0
 

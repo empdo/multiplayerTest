@@ -66,8 +66,8 @@ public class MyTcpListner
 
             int countRead = stream.Read(typeBuffer, 0, typeBuffer.Length);
             ushort packageType = BitConverter.ToUInt16(typeBuffer, 0);
-
             Console.WriteLine("Package type {0}", packageType);
+
             if (packageType == 0) {
 
                 ushort SendPackageType = 0;
