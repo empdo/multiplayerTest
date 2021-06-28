@@ -131,8 +131,6 @@ public class ServerConnection : MonoBehaviour {
         if (stream.CanRead & stream.DataAvailable) {
             Debug.Log("Listening for packages...");
 
-            Byte[] bytes = new Byte[sizeof(float) *3];
-
             byte[] buffer = new byte[2];
             stream.Read(buffer, 0, buffer.Length);
             ushort packageType = BitConverter.ToUInt16(buffer, 0);
