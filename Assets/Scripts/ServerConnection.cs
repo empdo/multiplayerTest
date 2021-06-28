@@ -13,53 +13,53 @@ using UnityEngine;
 public class ServerConnection : MonoBehaviour {
 
     static NetworkStream stream;
-    static TcpClient client;    
-    public HandlePlayers handlePlayers;
+    static TcpClient client;
+    public PlayerManager handlePlayers;
 
-    Byte[] idBuffer = new Byte[sizeof(ushort)];
-    Byte[] positionBuffer = new Byte[sizeof(float)];
+    public Queue<byte[]> packetQueue = new Queue<byte[]>();
 
-    ushort ownId;
+    public List<byte> deltaPacket = new List<byte>();
+
     public void Start(){
         client = new TcpClient("127.0.0.1", 25250);
         stream = client.GetStream(); 
 
         Debug.Log("Connected!");
-        SendPacket(0, new List<byte>());
+        QueuePacket(0, new List<byte>());
     }
 
-    void SendPacket(ushort packageType, List<byte> data) {
+    void QueuePacket(ushort packageType, List<byte> data) {
+        QueuePacket(packageType, data.ToArray());
+    }
+
+    void QueuePacket(ushort packageType, byte[] data) {
         List<byte> packet = new List<byte>();
 
-        ushort packetLength = (ushort)data.Count;
+        ushort packetLength = (ushort)data.Length;
 
         packet.AddRange(BitConverter.GetBytes(packageType));
         packet.AddRange(BitConverter.GetBytes(packetLength));
         packet.AddRange(data);
         
-        stream.Write(packet.ToArray(), 0, packet.Count);
+        packetQueue.Enqueue(packet.ToArray());
+
         Debug.Log("Sent package of type " +  packageType + ", with size " + packet.Count + "b");
     }
 
-    /*
-    client skickar till server med typ 0 att den finns, får tillbaka ett id med packet typ 0,
-    clienten skickar packet av typ 1 för att updatera sin position
-    */
-
-    void SendVector3(ushort packageType, Vector3 data) {
+    List<byte> Vector3ToBytes(Vector3 data) {
         List<byte> list = new List<byte>();
         list.AddRange(BitConverter.GetBytes(data.x));
         list.AddRange(BitConverter.GetBytes(data.y));
         list.AddRange(BitConverter.GetBytes(data.z));
-        SendPacket(packageType, list);
+        return list;
     }
     
     void ReadClientId(byte[] buffer) {
         // Read 4 bytes, save as client id
         stream.Read(buffer, 0, buffer.Length);
-        ownId = BitConverter.ToUInt16(buffer, 0);
+        handlePlayers.localPlayer.id = BitConverter.ToUInt16(buffer, 0);
 
-        Debug.Log("Saved client id as:" + ownId);
+        Debug.Log("Saved client id as:" + handlePlayers.localPlayer.id);
     }
 
     void ReadServerEvent(byte[] buffer) {
@@ -102,13 +102,32 @@ public class ServerConnection : MonoBehaviour {
         return offset;
     }
 
+    void AddDelta(ushort deltaType, byte[] buffer) {
+        deltaPacket.Concat(BitConverter.GetBytes(deltaType).Concat(buffer));
+    }
+
+    public void SendPositionDelta(Vector3 positionDelta) {
+        AddDelta(1, Vector3ToBytes(positionDelta).ToArray());
+    }
+
     void FixedUpdate() {
+        QueuePacket(2, deltaPacket);
+        foreach (byte[] packet in packetQueue) {
+            if (stream.CanWrite) {
+                stream.Write(packet, 0, packet.Length);
+            } 
+        }
+
+        packetQueue.Clear();
+        deltaPacket.Clear();
+
         while (stream.CanRead && stream.DataAvailable) {
             ProcessPackage();
         }
     }
 
     void ProcessPackage() {
+
         if (stream.CanRead & stream.DataAvailable) {
             Debug.Log("Listening for packages...");
 

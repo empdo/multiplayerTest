@@ -6,7 +6,13 @@ public class Player : MonoBehaviour
 {
 
     public Rigidbody rb;
-    public Vector3 position;
+
+
+    public Vector3 position {
+        get {return rb.position;}
+        set {rb.position = value;}
+    }
+    public ushort id;
     // Start is called before the first frame update
 
     void Start()
@@ -17,6 +23,6 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
