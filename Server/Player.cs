@@ -20,20 +20,20 @@ namespace GameServer {
         }
 
         public byte[] GetTick() {
-             
+            return new byte[1]; 
         }
 
-        public UpdatePositionFromDelta(float dx, float dy, float dz) {
+        public void UpdatePositionFromDelta(float dx, float dy, float dz) {
             x += dx;
             y += dy;
             z += dz;
         }
 
-        void QueuePacket(ushort packageType, List<byte> data) {
+        public void QueuePacket(ushort packageType, List<byte> data) {
             QueuePacket(packageType, data.ToArray());
         }
 
-        void QueuePacket(ushort packageType, byte[] data) {
+        public void QueuePacket(ushort packageType, byte[] data) {
             List<byte> packet = new List<byte>();
 
             ushort packetLength = (ushort)data.Length;
