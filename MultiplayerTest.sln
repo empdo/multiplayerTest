@@ -35,7 +35,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSSettingsProvider", "VSSet
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Rider.Editor", "Unity.Rider.Editor.csproj", "{1de78511-97f1-36c6-1635-faa778b61e8d}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.SysrootPackage.Editor", "Unity.SysrootPackage.Editor.csproj", "{6490817d-a699-c2e6-8663-aef059263738}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.VSCode.Editor", "Unity.VSCode.Editor.csproj", "{bfb82af9-7c70-a281-52f3-63f797b05d17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Sysroot.Linux_x86_64", "Unity.Sysroot.Linux_x86_64.csproj", "{561c01b6-b21b-78e1-af83-615244265ea8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Toolchain.Linux-x86_64", "Unity.Toolchain.Linux-x86_64.csproj", "{5c167353-bf88-40ca-8eb0-6a2ee242bc97}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -76,8 +82,14 @@ Global
 		{af86b981-abd4-e6bf-f2ee-8e38b975e29a}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1de78511-97f1-36c6-1635-faa778b61e8d}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1de78511-97f1-36c6-1635-faa778b61e8d}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6490817d-a699-c2e6-8663-aef059263738}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6490817d-a699-c2e6-8663-aef059263738}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{bfb82af9-7c70-a281-52f3-63f797b05d17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{bfb82af9-7c70-a281-52f3-63f797b05d17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{561c01b6-b21b-78e1-af83-615244265ea8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{561c01b6-b21b-78e1-af83-615244265ea8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5c167353-bf88-40ca-8eb0-6a2ee242bc97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5c167353-bf88-40ca-8eb0-6a2ee242bc97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -305,7 +305,6 @@
 -r:"/home/emil/dev/MultiplayerTest/Library/PackageCache/com.unity.visualscripting@1.5.1-pre.3/Editor/VisualScripting.Core/Dependencies/YamlDotNet/YamlDotNet.dll"
 -r:"/home/emil/dev/MultiplayerTest/Library/PackageCache/com.unity.visualscripting@1.5.1-pre.3/Runtime/VisualScripting.Core/Dependencies/MiscUtil/MiscUtil.dll"
 -r:"/home/emil/dev/MultiplayerTest/Library/PackageCache/com.unity.visualscripting@1.5.1-pre.3/Runtime/VisualScripting.Flow/Dependencies/NCalc/Antlr3.Runtime.dll"
--r:"Assets/uEcho/uEcho/Editor/uEcho.dll"
 -r:"Library/Bee/artifacts/2400b0aE.dag/Unity.VisualScripting.Core.Editor.ref.dll"
 -r:"Library/Bee/artifacts/2400b0aE.dag/Unity.VisualScripting.Core.ref.dll"
 -r:"Library/Bee/artifacts/2400b0aE.dag/Unity.VisualScripting.Flow.Editor.ref.dll"

@@ -95,10 +95,10 @@
      <Compile Include="Library\PackageCache\com.unity.visualscripting@1.5.1-pre.3\Editor\VisualScripting.Core\Reflection\CodebaseSubset.cs" />
      <Compile Include="Library\PackageCache\com.unity.visualscripting@1.5.1-pre.3\Editor\VisualScripting.Core\Interface\TextureResolution.cs" />
      <Compile Include="Library\PackageCache\com.unity.visualscripting@1.5.1-pre.3\Editor\VisualScripting.Core\Plugin\Migrations\Migration_1_4_5_to_1_4_6.cs" />
-     <Compile Include="Library\PackageCache\com.unity.visualscripting@1.5.1-pre.3\Editor\VisualScripting.Core\SerializedProperties\SerializedPropertyProviderProvider.cs" />
      <Compile Include="Library\PackageCache\com.unity.visualscripting@1.5.1-pre.3\Editor\VisualScripting.Core\Plugin\Changelogs\LegacyLudiqGraphs\Changelog_1_2_4.cs" />
      <Compile Include="Library\PackageCache\com.unity.visualscripting@1.5.1-pre.3\Editor\VisualScripting.Core\Plugin\Changelogs\LegacyLudiqGraphs\Changelog_1_1_1.cs" />
      <Compile Include="Library\PackageCache\com.unity.visualscripting@1.5.1-pre.3\Editor\VisualScripting.Core\Descriptors\IDescriptor.cs" />
+     <Compile Include="Library\PackageCache\com.unity.visualscripting@1.5.1-pre.3\Editor\VisualScripting.Core\SerializedProperties\SerializedPropertyProviderProvider.cs" />
      <Compile Include="Library\PackageCache\com.unity.visualscripting@1.5.1-pre.3\Editor\VisualScripting.Core\Assignment\IAssigner.cs" />
      <Compile Include="Library\PackageCache\com.unity.visualscripting@1.5.1-pre.3\Editor\VisualScripting.Core\Inspection\Unity\Vector3Inspector.cs" />
      <Compile Include="Library\PackageCache\com.unity.visualscripting@1.5.1-pre.3\Editor\VisualScripting.Core\Plugin\Changelogs\LegacyLudiqCore\Changelog_1_4_12.cs" />
@@ -739,9 +739,6 @@
     </Reference>
     <Reference Include="YamlDotNet">
         <HintPath>/home/emil/dev/MultiplayerTest/Library/PackageCache/com.unity.visualscripting@1.5.1-pre.3/Editor/VisualScripting.Core/Dependencies/YamlDotNet/YamlDotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="uEcho">
-        <HintPath>/home/emil/dev/MultiplayerTest/Assets/uEcho/uEcho/Editor/uEcho.dll</HintPath>
     </Reference>
     <Reference Include="IonicZip">
         <HintPath>/home/emil/dev/MultiplayerTest/Library/PackageCache/com.unity.visualscripting@1.5.1-pre.3/Editor/VisualScripting.Core/Dependencies/DotNetZip/IonicZip.dll</HintPath>

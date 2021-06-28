@@ -699,9 +699,6 @@
     <Reference Include="YamlDotNet">
         <HintPath>/home/emil/dev/MultiplayerTest/Library/PackageCache/com.unity.visualscripting@1.5.1-pre.3/Editor/VisualScripting.Core/Dependencies/YamlDotNet/YamlDotNet.dll</HintPath>
     </Reference>
-    <Reference Include="uEcho">
-        <HintPath>/home/emil/dev/MultiplayerTest/Assets/uEcho/uEcho/Editor/uEcho.dll</HintPath>
-    </Reference>
     <Reference Include="IonicZip">
         <HintPath>/home/emil/dev/MultiplayerTest/Library/PackageCache/com.unity.visualscripting@1.5.1-pre.3/Editor/VisualScripting.Core/Dependencies/DotNetZip/IonicZip.dll</HintPath>
     </Reference>

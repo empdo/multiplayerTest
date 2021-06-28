@@ -6,11 +6,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Diagnostics;
-using UnityEngine;
+using System.Numerics;
 
 using GameServer;
 
-public class MyTcpListner : MonoBehaviour
+public class MyTcpListner
 {
 
     static object _lock = new object();
@@ -45,6 +45,7 @@ public class MyTcpListner : MonoBehaviour
     public static void clientThread(object threadIndex)
     {
 
+
         PlayerConnection player;
         lock (_lock) { player = client_list[(int)threadIndex]; }
         Console.WriteLine("Connection established from: {0}", player.client.Client.RemoteEndPoint);
@@ -54,7 +55,9 @@ public class MyTcpListner : MonoBehaviour
         // Layout: (short) package type, (short) package length, (byte[]) package content.
         Byte[] lengthBuffer = new Byte[sizeof(ushort)];
         Byte[] typeBuffer = new Byte[sizeof(ushort)]; //gör om skit namn
+        Byte[] idBuffer = new Byte[sizeof(ushort)];
         while(true) {
+            
 
             Byte[] bytes = new Byte[1024];
             string data = string.Empty;
@@ -64,49 +67,59 @@ public class MyTcpListner : MonoBehaviour
             int countRead = stream.Read(typeBuffer, 0, typeBuffer.Length);
             ushort packageType = BitConverter.ToUInt16(typeBuffer, 0);
 
+            Console.WriteLine("Package type {0}", packageType);
             if (packageType == 0) {
-                string message = 0.ToString() + threadIndex.ToString() + new Vector3(0,0,0);
-                byte[] buffer = System.Text.Encoding.ASCII.GetBytes(message.ToString());
+
+                ushort SendPackageType = 0;
+                ushort id = Convert.ToUInt16((int)threadIndex);
+                ushort packetLength = (ushort)idBuffer.Length;
+
                 List<byte> list = new List<byte>();
-                list.AddRange(buffer);
+                list.AddRange(BitConverter.GetBytes(SendPackageType));
+                list.AddRange(BitConverter.GetBytes(packetLength));
+                list.AddRange(BitConverter.GetBytes(id));
+
                 stream.Write(list.ToArray(), 0, list.Count);    
-                break;
-            }
+            } else {
 
-            countRead = stream.Read(lengthBuffer, 0, lengthBuffer.Length);
-            if (!player.client.Client.Connected) {
-                break;
-            }
+                countRead = stream.Read(lengthBuffer, 0, lengthBuffer.Length);
+                //if (!player.client.Client.Connected) {
+                //    break;
+                //}
 
-            if (countRead == 0) {
-                break;
-            }
+                //if (countRead == 0) {
+                //    break;
+                //}
 
-            ushort bytesToRead = BitConverter.ToUInt16(lengthBuffer, 0);
+                ushort bytesToRead = BitConverter.ToUInt16(lengthBuffer, 0);
 
-            Console.WriteLine("package from: {0}", player.client.Client.RemoteEndPoint);
+                Console.WriteLine("package from: {0}", player.client.Client.RemoteEndPoint);
 
-            int i;
-            while ((i = stream.Read(bytes, 0, Math.Min(bytesToRead, bytes.Length))) != 0)
-            {
-                bytesToRead -= (ushort)i;
-                data = packageType.ToString() + System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                player.packetQueue.Enqueue(data);
+                int i;
+                while ((i = stream.Read(bytes, 0, Math.Min(bytesToRead, bytes.Length))) != 0)
+                {
+                    bytesToRead -= (ushort)i;
+                    data = packageType.ToString() + System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+                    player.packetQueue.Enqueue(data);
 
-                foreach(KeyValuePair<int, PlayerConnection> pair in client_list) {
-                    if (pair.Key != (int)threadIndex){
-                        pair.Value.packetQueue.Enqueue(data);
-                        pair.Value.writeQueue(pair.Value.client);
+                    foreach(KeyValuePair<int, PlayerConnection> pair in client_list) {
+                        if (pair.Key != (int)threadIndex){
+                            pair.Value.packetQueue.Enqueue(data);
+                            pair.Value.writeQueue(pair.Value.client);
+                        }
                     }
+
                 }
 
             }
 
-
         }
-        Console.WriteLine("Shutting down connection to {0}", player.client.Client.RemoteEndPoint);
-        lock (_lock) client_list.Remove((int)threadIndex);
-        player.client.Client.Shutdown(SocketShutdown.Both);
-        player.client.Close();
+
+
+        Console.WriteLine("asd");
+        //Console.WriteLine("Shutting down connection to {0}", player.client.Client.RemoteEndPoint);
+        //lock (_lock) client_list.Remove((int)threadIndex);
+        //player.client.Client.Shutdown(SocketShutdown.Both);
+        //player.client.Close();
     }
 }
