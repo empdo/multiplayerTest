@@ -23,6 +23,10 @@ namespace GameServer {
             return new byte[1]; 
         }
 
+        public void UpdatePositionFromDelta(float[] position) {
+            UpdatePositionFromDelta(position[0], position[1], position[2]);
+        }
+
         public void UpdatePositionFromDelta(float dx, float dy, float dz) {
             x += dx;
             y += dy;

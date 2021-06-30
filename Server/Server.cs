@@ -50,14 +50,31 @@ public class Server
 			player.QueuePacket(0, BitConverter.GetBytes(id));
 		}
 	}
-
-	public void SendPositionDelta()
+	public void SendPositionDelta(Player player)
 	{
+		lock (player){
+			foreach(Player notLocalplayer in client_list.Values) {
+				if(notLocalPlayer.id != player.id)	{
+					notLocalplayer.client.GetStream().Write(CreatePositionPacket());
+				}
+			}
+		}
 		//TODO: gör dehär    
 	}
 
+	public static float[] readFloatsFromBuffer(byte[] buffer) {
+		int offset = 0;
 
+		float[] list = new float[3];
 
+		list[0] = BitConverter.ToSingle(buffer, offset);
+		offset += sizeof(float);
+		list[1] = BitConverter.ToSingle(buffer, offset);
+		offset += sizeof(float);
+		list[2] = BitConverter.ToSingle(buffer, offset);
+
+		return list;
+	}
 	static void HandlePlayerDeltaPacket(Player player, byte[] deltaPacket)
 	{
 
@@ -69,44 +86,47 @@ public class Server
 
 		type = 1 : position packet (det enda som behöver hanteras)
 
-        TODO: hanterar bara en grej
-        1. gör om till lista med packet, anta storlek från typ av värden i listan
-        2. switch kolla första shorten
-        3. köra rätt funktion beroende på första shorten
-		*/
+		TODO: hanterar bara en grej
+		1. gör om till lista med packet, anta storlek från typ av värden i listan
+		2. switch kolla första shorten
+		3. köra rätt funktion beroende på första shorten
 		
-		if (deltaPacket.Length < sizeof(ushort) + (sizeof(float) * 3)) { 
+		*/
+
+		if (deltaPacket.Length < sizeof(ushort) + (sizeof(float) * 3))
+		{
 			return;
 		}
 
 		int offset = 0;
-        while (offset < deltaPacket.Length) {
+		while (offset < deltaPacket.Length)
+		{
 
-            ushort type = BitConverter.ToUInt16(deltaPacket, offset);
-            offset += sizeof(ushort);
-            float dx = BitConverter.ToSingle(deltaPacket, offset);
-            offset += sizeof(float);
-            float dy = BitConverter.ToSingle(deltaPacket, offset);
-            offset += sizeof(float);
-            float dz = BitConverter.ToSingle(deltaPacket, offset);
-            offset += sizeof(float);
+			ushort type = BitConverter.ToUInt16(deltaPacket, offset);
+			Console.WriteLine("type" + type);
+			offset += sizeof(ushort);
 
-            switch (type) {
-                case 0:
-                    break;
-                case 1:
-                    break;
-                case 2:
-                    lock (player)
-                    {
-                        player.UpdatePositionFromDelta(dx, dy, dz);
-                    }
-                    break;
-            }
+			switch (type)
+			{
+				case 0:
+					break;
+				case 1:
+					offset += sizeof(float) *3;
 
-
-        }
+					lock (player)
+					{
+						player.UpdatePositionFromDelta(readFloatsFromBuffer(deltaPacket));
+						SendPositionDelta(player);
+					}
+					break;
+				case 2:
+					break;
+			}
+		}
 	}
+
+
+
 	public static void clientThread(object threadIndex)
 	{
 
@@ -145,16 +165,14 @@ public class Server
 					HandlePlayerDeltaPacket(player, packageContent);
 					// Tick packet (delta from last tick)
 					break;
-
-
 			}
 
-            foreach (byte[] packet in player.packetQueue)
-            {
-                stream.Write(packet);
-            }
+			foreach (byte[] packet in player.packetQueue)
+			{
+				stream.Write(packet);
+			}
 
-            player.packetQueue.Clear();
+			player.packetQueue.Clear();
 
 			//Console.WriteLine("Shutting down connection to {0}", player.client.Client.RemoteEndPoint);
 			//lock (_lock) client_list.Remove((int)threadIndex);

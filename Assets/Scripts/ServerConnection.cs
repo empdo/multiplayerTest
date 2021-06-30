@@ -36,6 +36,7 @@ public class ServerConnection : MonoBehaviour {
         List<byte> packet = new List<byte>();
 
         ushort packetLength = (ushort)data.Length;
+        Debug.Log("Package length: " + packetLength);
 
         packet.AddRange(BitConverter.GetBytes(packageType));
         packet.AddRange(BitConverter.GetBytes(packetLength));
@@ -103,15 +104,16 @@ public class ServerConnection : MonoBehaviour {
     }
 
     void AddDelta(ushort deltaType, byte[] buffer) {
-        deltaPacket.Concat(BitConverter.GetBytes(deltaType).Concat(buffer));
+        deltaPacket = deltaPacket.Concat(BitConverter.GetBytes(deltaType).Concat(buffer)).ToList();
     }
 
     public void SendPositionDelta(Vector3 positionDelta) {
         AddDelta(1, Vector3ToBytes(positionDelta).ToArray());
+       // Debug.Log("Sednig position delta" + positionDelta);
     }
 
     void FixedUpdate() {
-        QueuePacket(2, deltaPacket);
+        QueuePacket(2, deltaPacket);       
         foreach (byte[] packet in packetQueue) {
             if (stream.CanWrite) {
                 stream.Write(packet, 0, packet.Length);
@@ -121,7 +123,7 @@ public class ServerConnection : MonoBehaviour {
         packetQueue.Clear();
         deltaPacket.Clear();
 
-        while (stream.CanRead && stream.DataAvailable) {
+        while (stream.CanRead & stream.DataAvailable) {
             ProcessPackage();
         }
     }
@@ -146,16 +148,17 @@ public class ServerConnection : MonoBehaviour {
             switch(packageType) {
                 case 0:
                     // Read id
-                    ReadClientId(packageContent);
+                    //ReadClientId(packageContent);
                     break;
                 case 1:
                     // Server event
-                    ReadServerEvent(packageContent); 
+                    //ReadServerEvent(packageContent); 
                     break;
-                case 2:
-                    ReadTick(packageContent);
+                case 2: 
+                    ReadTick(packageContent);                    
+                    Console.WriteLine("ReadTick");
+                    break;
                     // Tick packet (delta from last tick)
-                    break;
             }
             
         }

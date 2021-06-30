@@ -17,8 +17,9 @@ public class PlayerManager : MonoBehaviour
 
     void FixedUpdate() {
         if(localPlayer.position != oldPosition){
+            Debug.Log(serverConnection);
             serverConnection.SendPositionDelta(localPlayer.position - oldPosition);
-            Debug.Log("Sending position");
+            Debug.Log("Sednign delta location" + (localPlayer.position - oldPosition));
         }
 
         oldPosition = localPlayer.position;
