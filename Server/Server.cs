@@ -15,6 +15,7 @@ public class Server
 
 	static object _lock = new object();
 	static Dictionary<int, GameServer.Player> client_list = new Dictionary<int, GameServer.Player>();
+
 	public static void Main()
 	{
 		TcpListener server;
@@ -50,17 +51,31 @@ public class Server
 			player.QueuePacket(0, BitConverter.GetBytes(id));
 		}
 	}
-	public void SendPositionDelta(Player player)
+	public void SendPositionDeltaToOtherPlayers(Player player)
 	{
 		lock (player){
 			foreach(Player notLocalplayer in client_list.Values) {
-				if(notLocalPlayer.id != player.id)	{
-					notLocalplayer.client.GetStream().Write(CreatePositionPacket());
+				if(notLocalplayer.id != player.id)	{
+					notLocalplayer.SendPositionDelta(positionToBytes(player));
 				}
 			}
 		}
 		//TODO: gör dehär    
 	}
+
+	public byte[] positionToBytes(Player player) {
+		lock (player)
+		{
+			List<byte> list = new List<byte>();
+			list.AddRange(BitConverter.GetBytes(player.x));
+			list.AddRange(BitConverter.GetBytes(player.y));
+			list.AddRange(BitConverter.GetBytes(player.z));
+			return list.ToArray();
+			
+		}
+	}
+
+
 
 	public static float[] readFloatsFromBuffer(byte[] buffer) {
 		int offset = 0;
@@ -116,7 +131,8 @@ public class Server
 					lock (player)
 					{
 						player.UpdatePositionFromDelta(readFloatsFromBuffer(deltaPacket));
-						SendPositionDelta(player);
+						SendPositionDeltaToOtherPlayers(player);
+
 					}
 					break;
 				case 2:
@@ -124,7 +140,6 @@ public class Server
 			}
 		}
 	}
-
 
 
 	public static void clientThread(object threadIndex)
@@ -138,6 +153,15 @@ public class Server
 
 		while (player.client.Client.Connected)
 		{
+			player.QueuePacket(2, player.deltaPacket);       
+			foreach (byte[] packet in player.packetQueue) {
+				if (stream.CanWrite) {
+					stream.Write(packet, 0, packet.Length);
+				} 
+			}
+
+			player.packetQueue.Clear();
+			player.deltaPacket.Clear();
 
 			// 3, 4, 0, 0, 0, 0
 

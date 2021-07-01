@@ -5,11 +5,13 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Linq;
 
 namespace GameServer {
     public class Player {
 
         public Queue<byte[]> packetQueue = new Queue<byte[]>();
+        public List<byte> deltaPacket = new List<byte>();
         public TcpClient client;
 
         public float x, y, z;
@@ -50,6 +52,17 @@ namespace GameServer {
 
             Console.WriteLine("Sent package of type " +  packageType + ", with size " + packet.Count + "b");
         }
+
+
+        void AddDelta(ushort deltaType, byte[] buffer) {
+            deltaPacket = deltaPacket.Concat(BitConverter.GetBytes(deltaType).Concat(buffer)).ToList();
+        }
+
+        public void SendPositionDelta(byte[] positionDelta) {
+            AddDelta(1, positionDelta);
+        // Debug.Log("Sednig position delta" + positionDelta);
+        }
+
 
     }
 
