@@ -51,7 +51,7 @@ public class Server
 			player.QueuePacket(0, BitConverter.GetBytes(id));
 		}
 	}
-	public void SendPositionDeltaToOtherPlayers(Player player)
+	public static void SendPositionDeltaToOtherPlayers(Player player)
 	{
 		lock (player){
 			foreach(Player notLocalplayer in client_list.Values) {
@@ -63,7 +63,7 @@ public class Server
 		//TODO: gör dehär    
 	}
 
-	public byte[] positionToBytes(Player player) {
+	public static byte[] positionToBytes(Player player) {
 		lock (player)
 		{
 			List<byte> list = new List<byte>();
@@ -76,6 +76,14 @@ public class Server
 	}
 
 
+	public static void PPByteArray(byte[] sak) {
+		string content = string.Empty;
+		for (int i = 0; i < sak.Length; i++) {
+		content += ((int)sak[i] + ", ").ToString();
+		}
+
+		Console.WriteLine(content);
+	}
 
 	public static float[] readFloatsFromBuffer(byte[] buffer) {
 		int offset = 0;
@@ -118,8 +126,8 @@ public class Server
 		{
 
 			ushort type = BitConverter.ToUInt16(deltaPacket, offset);
-			Console.WriteLine("type" + type);
 			offset += sizeof(ushort);
+			Console.WriteLine("type {0}", type);
 
 			switch (type)
 			{
@@ -153,9 +161,13 @@ public class Server
 
 		while (player.client.Client.Connected)
 		{
-			player.QueuePacket(2, player.deltaPacket);       
+
+			//if (player.deltaPacket.Count > 0) {
+				player.QueuePacket(2, player.deltaPacket);       
+			//}
 			foreach (byte[] packet in player.packetQueue) {
 				if (stream.CanWrite) {
+					PPByteArray(packet);	
 					stream.Write(packet, 0, packet.Length);
 				} 
 			}
@@ -190,13 +202,6 @@ public class Server
 					// Tick packet (delta from last tick)
 					break;
 			}
-
-			foreach (byte[] packet in player.packetQueue)
-			{
-				stream.Write(packet);
-			}
-
-			player.packetQueue.Clear();
 
 			//Console.WriteLine("Shutting down connection to {0}", player.client.Client.RemoteEndPoint);
 			//lock (_lock) client_list.Remove((int)threadIndex);

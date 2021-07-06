@@ -49,9 +49,9 @@ public class ServerConnection : MonoBehaviour {
 
     List<byte> Vector3ToBytes(Vector3 data) {
         List<byte> list = new List<byte>();
-        list.AddRange(BitConverter.GetBytes(data.x));
-        list.AddRange(BitConverter.GetBytes(data.y));
-        list.AddRange(BitConverter.GetBytes(data.z));
+        list.AddRange(BitConverter.GetBytes((float)data.x));
+        list.AddRange(BitConverter.GetBytes((float)data.y));
+        list.AddRange(BitConverter.GetBytes((float)data.z));
         return list;
     }
     
@@ -68,13 +68,17 @@ public class ServerConnection : MonoBehaviour {
     }
 
     void ReadTick(byte[] buffer) {
+
+//        PPByteArray(buffer);
         // 2; 5, 4, 1, 2, 3; 5, 3, 1, 3, 2
         
         int offset = 0;
         while(offset < buffer.Length) {
             ushort deltaType = BitConverter.ToUInt16(buffer, offset);
+            Debug.LogWarning("delta" + deltaType);
             offset += sizeof(ushort);
             byte[] newBuffer = buffer.Skip(offset).ToArray();
+            PPByteArray(newBuffer);
             switch (deltaType) {
                 case 1:
                     offset += ReadPositionDelta(newBuffer);
@@ -98,6 +102,9 @@ public class ServerConnection : MonoBehaviour {
         deltaPosition.z = BitConverter.ToSingle(buffer, offset);
         offset += sizeof(float);
 
+        Debug.LogWarning("delta " + deltaPosition);
+        Debug.LogWarning("id: "+ id);
+
         handlePlayers.UpdatePlayerPosition(id, deltaPosition);
 
         return offset;
@@ -113,7 +120,9 @@ public class ServerConnection : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        QueuePacket(2, deltaPacket);       
+       // if (deltaPacket.Count > 0) {
+            QueuePacket(2, deltaPacket);       
+        //}
         foreach (byte[] packet in packetQueue) {
             if (stream.CanWrite) {
                 stream.Write(packet, 0, packet.Length);
@@ -123,9 +132,19 @@ public class ServerConnection : MonoBehaviour {
         packetQueue.Clear();
         deltaPacket.Clear();
 
-        while (stream.CanRead & stream.DataAvailable) {
-            ProcessPackage();
+        //while (stream.CanRead & stream.DataAvailable) {
+        //    Debug.Log("listening");
+        //}
+        ProcessPackage();
+    }
+
+    void PPByteArray(byte[] sak) {
+        string content = string.Empty;
+        for (int i = 0; i < sak.Length; i++) {
+            content += ((int)sak[i] + ", ").ToString();
         }
+
+        Debug.Log(content);
     }
 
     void ProcessPackage() {
@@ -143,12 +162,12 @@ public class ServerConnection : MonoBehaviour {
             Debug.Log("Type is " + packageType + " and length is " + packageLength);
 
             byte[] packageContent = new byte[packageLength];
-            stream.Read(packageContent, 0, packageContent.Length);
+            int bytes = stream.Read(packageContent, 0, packageContent.Length);
 
             switch(packageType) {
                 case 0:
                     // Read id
-                    //ReadClientId(packageContent);
+                    ReadClientId(packageContent);
                     break;
                 case 1:
                     // Server event
@@ -156,7 +175,6 @@ public class ServerConnection : MonoBehaviour {
                     break;
                 case 2: 
                     ReadTick(packageContent);                    
-                    Console.WriteLine("ReadTick");
                     break;
                     // Tick packet (delta from last tick)
             }

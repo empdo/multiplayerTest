@@ -250,7 +250,7 @@ MonoBehaviour:
   localPlayer: {fileID: 227560519}
   oldPosition: {x: 0, y: 0, z: 0}
   playerPrefab: {fileID: 659859149653533630, guid: 8ebc6c12d3d12f549ae8e9f2f71cafd0, type: 3}
-  serverConnection: {fileID: 0}
+  serverConnection: {fileID: 1257580361}
 --- !u!114 &1257580361
 MonoBehaviour:
   m_ObjectHideFlags: 0
