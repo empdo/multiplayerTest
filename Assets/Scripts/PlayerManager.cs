@@ -10,7 +10,7 @@ public class PlayerManager : MonoBehaviour
     
     public Vector3 oldPosition = Vector3.zero;
 
-    Dictionary<int, Player> players; //id, gameobject
+    Dictionary<int, Player> players = new Dictionary<int, Player>(); //id, gameobject
     public GameObject playerPrefab;
 
     public ServerConnection serverConnection;

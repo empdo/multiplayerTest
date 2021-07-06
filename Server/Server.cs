@@ -67,6 +67,7 @@ public class Server
 		lock (player)
 		{
 			List<byte> list = new List<byte>();
+			list.AddRange(BitConverter.GetBytes(player.id));
 			list.AddRange(BitConverter.GetBytes(player.x));
 			list.AddRange(BitConverter.GetBytes(player.y));
 			list.AddRange(BitConverter.GetBytes(player.z));
@@ -167,7 +168,7 @@ public class Server
 			//}
 			foreach (byte[] packet in player.packetQueue) {
 				if (stream.CanWrite) {
-					PPByteArray(packet);	
+					PPByteArray(packet);
 					stream.Write(packet, 0, packet.Length);
 				} 
 			}
@@ -184,10 +185,13 @@ public class Server
 			stream.Read(buffer, 0, buffer.Length);
 			ushort packageLength = BitConverter.ToUInt16(buffer, 0);
 
-			Console.WriteLine("Type is " + packageType + " and length is " + packageLength);
 
 			byte[] packageContent = new byte[packageLength];
 			stream.Read(packageContent, 0, packageContent.Length);
+			if (packageLength > 0) {
+				Console.WriteLine("Type is " + packageType + " and length is " + packageLength);
+				//PPByteArray(packageContent);	
+			}
 
 			switch (packageType)
 			{

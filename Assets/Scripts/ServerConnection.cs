@@ -78,7 +78,6 @@ public class ServerConnection : MonoBehaviour {
             Debug.LogWarning("delta" + deltaType);
             offset += sizeof(ushort);
             byte[] newBuffer = buffer.Skip(offset).ToArray();
-            PPByteArray(newBuffer);
             switch (deltaType) {
                 case 1:
                     offset += ReadPositionDelta(newBuffer);
@@ -88,19 +87,21 @@ public class ServerConnection : MonoBehaviour {
     }
 
     int ReadPositionDelta(byte[] buffer) {
+
+        PPByteArray2(buffer);
         int offset = 0;
         ushort id = BitConverter.ToUInt16(buffer, offset);
         offset += sizeof(ushort);
 
         Vector3 deltaPosition = new Vector3();
         deltaPosition.x = BitConverter.ToSingle(buffer, offset);
-        offset += sizeof(float);
+        offset += 4;
 
         deltaPosition.y = BitConverter.ToSingle(buffer, offset);
-        offset += sizeof(float);
+        offset += 4;
 
         deltaPosition.z = BitConverter.ToSingle(buffer, offset);
-        offset += sizeof(float);
+        offset += 4;
 
         Debug.LogWarning("delta " + deltaPosition);
         Debug.LogWarning("id: "+ id);
@@ -125,6 +126,7 @@ public class ServerConnection : MonoBehaviour {
         //}
         foreach (byte[] packet in packetQueue) {
             if (stream.CanWrite) {
+                PPByteArray(packet);
                 stream.Write(packet, 0, packet.Length);
             } 
         }
@@ -145,6 +147,14 @@ public class ServerConnection : MonoBehaviour {
         }
 
         Debug.Log(content);
+    }
+    void PPByteArray2(byte[] sak) {
+        string content = string.Empty;
+        for (int i = 0; i < sak.Length; i++) {
+            content += ((int)sak[i] + ", ").ToString();
+        }
+
+        Debug.Log("sak" + content);
     }
 
     void ProcessPackage() {
