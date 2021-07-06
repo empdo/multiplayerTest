@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Diagnostics;
 using System.Numerics;
+using System.Linq;
 
 using GameServer;
 
@@ -135,14 +136,14 @@ public class Server
 				case 0:
 					break;
 				case 1:
-					offset += sizeof(float) *3;
 
 					lock (player)
 					{
-						player.UpdatePositionFromDelta(readFloatsFromBuffer(deltaPacket));
+						player.UpdatePositionFromDelta(readFloatsFromBuffer(deltaPacket.Skip(offset).ToArray()));
 						SendPositionDeltaToOtherPlayers(player);
 
 					}
+					offset += sizeof(float) *3;
 					break;
 				case 2:
 					break;
