@@ -479,6 +479,10 @@ PrefabInstance:
       propertyPath: playerManager
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3063708591275927009, guid: 8a7fd9a8b083880589cc89b998485d93, type: 3}
+      propertyPath: m_Constraints
+      value: 104
+      objectReference: {fileID: 0}
     - target: {fileID: 4130972283456734738, guid: 8a7fd9a8b083880589cc89b998485d93, type: 3}
       propertyPath: m_Name
       value: LocalPlayer

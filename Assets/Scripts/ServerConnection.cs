@@ -21,7 +21,7 @@ public class ServerConnection : MonoBehaviour {
     public List<byte> deltaPacket = new List<byte>();
 
     public void Start(){
-        client = new TcpClient("127.0.0.1", 25250);
+        client = new TcpClient("83.227.32.208", 25250);
         stream = client.GetStream(); 
 
         Debug.Log("Connected!");

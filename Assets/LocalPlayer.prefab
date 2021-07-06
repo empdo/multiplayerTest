@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &3484026562772175247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4130972283456734738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08e784149f4419b1cb6427c1c8284e02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 50
+  rb: {fileID: 3063708591275927009}
 --- !u!1001 &3493776267492173228
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11,6 +25,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: LocalPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 1943331527523811405, guid: 8ebc6c12d3d12f549ae8e9f2f71cafd0, type: 3}
+      propertyPath: m_Constraints
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 4229764981249939814, guid: 8ebc6c12d3d12f549ae8e9f2f71cafd0, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 719f6125f35544327b5da93f974abebb, type: 2}
     - target: {fileID: 4704081413885472648, guid: 8ebc6c12d3d12f549ae8e9f2f71cafd0, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -59,3 +81,13 @@ PrefabInstance:
     - {fileID: 3448594021380789306, guid: 8ebc6c12d3d12f549ae8e9f2f71cafd0, type: 3}
     - {fileID: 325857551257508145, guid: 8ebc6c12d3d12f549ae8e9f2f71cafd0, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8ebc6c12d3d12f549ae8e9f2f71cafd0, type: 3}
+--- !u!1 &4130972283456734738 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 659859149653533630, guid: 8ebc6c12d3d12f549ae8e9f2f71cafd0, type: 3}
+  m_PrefabInstance: {fileID: 3493776267492173228}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &3063708591275927009 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 1943331527523811405, guid: 8ebc6c12d3d12f549ae8e9f2f71cafd0, type: 3}
+  m_PrefabInstance: {fileID: 3493776267492173228}
+  m_PrefabAsset: {fileID: 0}
