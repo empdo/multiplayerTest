@@ -37,6 +37,7 @@ public class PlayerManager : MonoBehaviour
 
     public void UpdatePlayerPosition(int id, Vector3 deltaPosition) {
         if (players.ContainsKey(id)) {
+            Debug.Log("position" + deltaPosition);
             players[id].position = deltaPosition;
         } else {
             InitPlayer(id, deltaPosition);
