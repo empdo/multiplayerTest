@@ -10,6 +10,7 @@ using System.Net.NetworkInformation;
 using System.Linq;
 
 using UnityEngine;
+using UnityEngine.UI;
 public class ServerConnection : MonoBehaviour {
 
     static NetworkStream stream;
@@ -20,12 +21,37 @@ public class ServerConnection : MonoBehaviour {
 
     public List<byte> deltaPacket = new List<byte>();
 
-    public void Start(){
-        client = new TcpClient("83.227.32.208", 25250);
+    public Button connectButton;
+
+    public InputField inputFieldIp;
+    public InputField inputFieldPort;
+
+    public string ip = "83.227.32.208";
+    public int port = 25250;
+
+    public void Start() {
+
+        inputFieldIp.onSubmit.AddListener((value) => ip = value);
+        inputFieldPort.onSubmit.AddListener((value) => port = int.Parse(value));
+
+        Button btn = connectButton.GetComponent<Button>();
+		btn.onClick.AddListener(Connect);
+
+    }
+
+    public void Connect(){
+
+        if (inputFieldIp)
+
+        client = new TcpClient(ip, port);
         stream = client.GetStream(); 
 
         Debug.Log("Connected!");
         QueuePacket(0, new List<byte>());
+
+        inputFieldIp.gameObject.SetActive(false);
+        inputFieldPort.gameObject.SetActive(false);
+        connectButton.gameObject.SetActive(false);
     }
 
     void QueuePacket(ushort packageType, List<byte> data) {
