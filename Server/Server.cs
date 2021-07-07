@@ -77,7 +77,6 @@ public class Server
 		}
 	}
 
-
 	public static void PPByteArray(byte[] sak) {
 		string content = string.Empty;
 		for (int i = 0; i < sak.Length; i++) {
@@ -151,10 +150,8 @@ public class Server
 		}
 	}
 
-
 	public static void clientThread(object threadIndex)
 	{
-
 
 		GameServer.Player player;
 		lock (_lock) { player = client_list[(int)threadIndex]; }
@@ -177,8 +174,6 @@ public class Server
 			player.packetQueue.Clear();
 			player.deltaPacket.Clear();
 
-			// 3, 4, 0, 0, 0, 0
-
 			byte[] buffer = new byte[2];
 			stream.Read(buffer, 0, buffer.Length);
 			ushort packageType = BitConverter.ToUInt16(buffer, 0);
@@ -193,7 +188,6 @@ public class Server
 				Console.WriteLine("Type is " + packageType + " and length is " + packageLength);
 				//PPByteArray(packageContent);	
 			}
-
 			switch (packageType)
 			{
 				case 0:
@@ -207,11 +201,9 @@ public class Server
 					// Tick packet (delta from last tick)
 					break;
 			}
-
-			//Console.WriteLine("Shutting down connection to {0}", player.client.Client.RemoteEndPoint);
-			//lock (_lock) client_list.Remove((int)threadIndex);
-			//player.client.Client.Shutdown(SocketShutdown.Both);
-			//player.client.Close();
 		}
+		lock (_lock) client_list.Remove((int)threadIndex);
+		player.client.Client.Shutdown(SocketShutdown.Both);
+		player.client.Close();
 	}
 }

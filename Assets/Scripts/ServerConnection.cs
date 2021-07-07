@@ -41,8 +41,6 @@ public class ServerConnection : MonoBehaviour {
 
     public void Connect(){
 
-        if (inputFieldIp)
-
         client = new TcpClient(ip, port);
         stream = client.GetStream(); 
 
@@ -182,6 +180,14 @@ public class ServerConnection : MonoBehaviour {
 
         Debug.Log("sak" + content);
     }
+
+    void OnApplicationQuit()
+    {
+            client.Client.Shutdown(SocketShutdown.Send);
+
+            stream.Close();
+            client.Close();
+    } 
 
     void ProcessPackage() {
 
